@@ -2,7 +2,7 @@ from sql30 import db
 
 
 class Teachers(db.Model):
-    TABLE = "TEACHERS"
+    TABLE = "teachers"
     P_KEY = "id"
 
     DB_SCHEMA = {

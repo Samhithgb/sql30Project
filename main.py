@@ -5,10 +5,12 @@
 import DatabaseFactory
 import os
 
-
 def access_database():
+    os.remove("Teachers.db")
+    os.remove("sql30.db")
+
     teacher = DatabaseFactory.get_database("teacher")
-    teacher.tbl = 'TEACHERS'
+    teacher.tbl = "teachers"
     teacher.write(id=1, name="Samhith", subject="Subject")
 
 
