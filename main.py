@@ -5,13 +5,15 @@
 import DatabaseFactory
 import os
 
-def access_database():
-    os.remove("Teachers.db")
-    os.remove("sql30.db")
+import Students
+import Teachers
 
-    teacher = DatabaseFactory.get_database("teacher")
-    teacher.tbl = "teachers"
-    teacher.write(id=1, name="Samhith", subject="Subject")
+
+def access_database():
+    with DatabaseFactory.get_database("students") as db:
+        db.table = 'students'
+        db.create(id=2, name="Samhith", marks="100", fees = "1000")
+
 
 
 # Press the green button in the gutter to run the script.
