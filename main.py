@@ -9,6 +9,9 @@ import SharedResource
 import Students
 import Teachers
 import MyThread
+import PaliTask
+from pali import worker, task, logger
+
 
 def access_database():
     with DatabaseFactory.get_database("students") as db:
@@ -20,13 +23,12 @@ def access_database():
 
 # Press the green button in the gutter to run the script.
 def run_threads():
-
     work_list = ["Work1", "Work2", "Work3", "Work4", "Work5"]
 
     shared_resource = SharedResource.SharedResource()
 
-    thread1 = MyThread.MyThread(1, "Thread1", 10,shared_resource )
-    thread2 = MyThread.MyThread(1, "Thread2", 10, shared_resource)
+    thread1 = MyThread.MyThread(1, "Thread1", 2, shared_resource)
+    thread2 = MyThread.MyThread(1, "Thread2", 2, shared_resource)
 
     for i in work_list:
         shared_resource.add_work(i)
@@ -42,10 +44,23 @@ def run_threads():
     for i in threads:
         i.join()
 
+    # Use Pali
+    for i in work_list:
+        shared_resource.add_work(i)
+
+    tasks = [PaliTask.PaliTask(i, "Thread" + str(i), 1, shared_resource) for i in range(5)]
+
+    with worker.ThreadPool(os.cpu_count()) as pool:
+        _ = [pool.append_task(t) for t in tasks]
+
+    while all([_.done for _ in tasks]):
+        pass
+
     print("Done")
 
+
 if __name__ == '__main__':
-    access_database()
-    #run_threads()
+    #access_database()
+     run_threads()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
